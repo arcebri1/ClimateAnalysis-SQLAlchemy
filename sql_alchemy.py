@@ -13,7 +13,7 @@ from flask import Flask, jsonify
 #################################################
 # Database Setup
 #################################################
-engine = create_engine("sqlite:///hawaii.sqlite")
+engine = create_engine("sqlite:///Resources/hawaii.sqlite")
 
 # reflect an existing database into a new model
 Base = automap_base()
@@ -95,6 +95,10 @@ def tobs():
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
+    #Calculate the date one year ago from the last date
+    year_ago=dt.date(2017, 8, 23) - dt.timedelta(days=365)
+
+
     """Return a list of dates and tobs"""
     # Query all dates and tobs of most active station last year
     results = session.query(Measurement.date, Measurement.tobs).\
@@ -115,11 +119,63 @@ def tobs():
     return jsonify(list_tobs)
 
 
-# @app.route("/api/v1.0/<start>")
-# def <start>():
+@app.route("/api/v1.0/<start>")
+def start():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
 
-# @app.route("/api/v1.0/<start>/<end>")
-# def <start>/<end>():
+
+    """Return a list of temp min,avg and max"""
+    # calculate/query `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date
+
+    results = session.query(Measurement.date, func.min(Measurement.tobs), func.max(Measurement.tobs),func.avg(Measurement.tobs)).\
+        filter(Measurement.date>=start).\
+        group_by(Measurement.date).all()
+
+    session.close()
+
+    # Create a dictionary from the row data and append to list of tobs
+    list_start = []
+    for date, min, max, avg in results:
+        start_dict = {}
+        start_dict["date"] = date
+        start_dict["TMIN"] = min
+        start_dict["TMAX"] = max
+        start_dict["TAVG"] = avg
+        list_start.append(start_dict)
+
+    return jsonify(list_start)
+
+
+
+@app.route("/api/v1.0/<start>/<end>")
+def end():
+
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+
+    """Return a list of temp min,avg and max"""
+    # calculate/query `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date
+
+    results = session.query(Measurement.date,func.min(Measurement.tobs),func.max(Measurement.tobs),func.avg(Measurement.tobs)).\
+        filter(Measurement.date>=start, Measurement.date<=end).\
+        group_by(Measurement.date).all()
+
+    session.close()
+
+    # Create a dictionary from the row data and append to list of tobs
+    list_end = []
+    for date, min, max, avg in results:
+        end_dict = {}
+        end_dict["date"] = date
+        end_dict["TMIN"] = min
+        end_dict["TMAX"] = max
+        end_dict["TAVG"] = avg
+        list_end.append(end_dict)
+
+    return jsonify(list_end)
+
 
 
 
