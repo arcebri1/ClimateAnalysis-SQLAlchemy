@@ -13,7 +13,7 @@ from flask import Flask, jsonify
 #################################################
 # Database Setup
 #################################################
-engine = create_engine("sqlite:///Resources/hawaii.sqlite")
+engine = create_engine("sqlite:///hawaii.sqlite")
 
 # reflect an existing database into a new model
 Base = automap_base()
@@ -70,17 +70,58 @@ def precipitation():
 
 @app.route("/api/v1.0/stations")
 def stations():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return a list of all stations"""
+    # Query all stations
+    results = session.query(Station.station, Station.name).all()
+
+    session.close()
+
+    # Create a dictionary from the row data and append to list of stations
+    list_station = []
+    for station, name in results:
+        station_dict = {}
+        station_dict["station"] = station
+        station_dict["name"] = name
+        list_station.append(station_dict)
+
+    return jsonify(list_station)
+
 
 @app.route("/api/v1.0/tobs")
 def tobs():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
 
-@app.route("/api/v1.0/<start>")
-def <start>():
+    """Return a list of dates and tobs"""
+    # Query all dates and tobs of most active station last year
+    results = session.query(Measurement.date, Measurement.tobs).\
+    filter(Measurement.station=='USC00519281').\
+    filter(Measurement.date>=year_ago).\
+    order_by(Measurement.tobs).all()
 
-@app.route("/api/v1.0/<start>/<end>")
-def <start>/<end>():
+    session.close()
+
+    # Create a dictionary from the row data and append to list of tobs
+    list_tobs = []
+    for date, tobs in results:
+        tobs_dict = {}
+        tobs_dict["date"] = date
+        tobs_dict["tobs"] = tobs
+        list_tobs.append(tobs_dict)
+
+    return jsonify(list_tobs)
+
+
+# @app.route("/api/v1.0/<start>")
+# def <start>():
+
+# @app.route("/api/v1.0/<start>/<end>")
+# def <start>/<end>():
 
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) 
