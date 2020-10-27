@@ -48,6 +48,25 @@ def welcome():
 
 @app.route("/api/v1.0/precipitation")
 def precipitation():
+     # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return a list of all dates and precipitation"""
+    # Query all dates and precipitations
+    results = session.query(Measurement.date, Measurement.prcp).\
+        order_by(Measurement.date).all()
+
+    session.close()
+
+    # Create a dictionary from the row data and append to a list of all_passengers
+    list_prcp = []
+    for date, prcp in results:
+        prcp_dict = {}
+        prcp_dict["date"] = date
+        prcp_dict["prcp"] = prcp
+        list_prcp.append(prcp_dict)
+
+    return jsonify(list_prcp)
 
 @app.route("/api/v1.0/stations")
 def stations():
@@ -60,3 +79,8 @@ def <start>():
 
 @app.route("/api/v1.0/<start>/<end>")
 def <start>/<end>():
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
