@@ -104,7 +104,7 @@ def tobs():
     results = session.query(Measurement.date, Measurement.tobs).\
     filter(Measurement.station=='USC00519281').\
     filter(Measurement.date>=year_ago).\
-    order_by(Measurement.tobs).all()
+    order_by(Measurement.date).all()
 
     session.close()
 
@@ -120,7 +120,7 @@ def tobs():
 
 
 @app.route("/api/v1.0/<start>")
-def start():
+def temp_start(start):
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
@@ -134,14 +134,14 @@ def start():
 
     session.close()
 
-    # Create a dictionary from the row data and append to list of tobs
+    # Create a dictionary from the row data and append to list of start date
     list_start = []
     for date, min, max, avg in results:
         start_dict = {}
         start_dict["date"] = date
-        start_dict["TMIN"] = min
-        start_dict["TMAX"] = max
-        start_dict["TAVG"] = avg
+        start_dict["MIN"] = min
+        start_dict["MAX"] = max
+        start_dict["AVG"] = avg
         list_start.append(start_dict)
 
     return jsonify(list_start)
@@ -149,14 +149,14 @@ def start():
 
 
 @app.route("/api/v1.0/<start>/<end>")
-def end():
+def temp_start_end(start,end):
 
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
 
     """Return a list of temp min,avg and max"""
-    # calculate/query `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date
+    # calculate/query `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date and less than and equal to the end date
 
     results = session.query(Measurement.date,func.min(Measurement.tobs),func.max(Measurement.tobs),func.avg(Measurement.tobs)).\
         filter(Measurement.date>=start, Measurement.date<=end).\
@@ -164,14 +164,14 @@ def end():
 
     session.close()
 
-    # Create a dictionary from the row data and append to list of tobs
+    # Create a dictionary from the row data and append to list of start and end
     list_end = []
     for date, min, max, avg in results:
         end_dict = {}
         end_dict["date"] = date
-        end_dict["TMIN"] = min
-        end_dict["TMAX"] = max
-        end_dict["TAVG"] = avg
+        end_dict["MIN"] = min
+        end_dict["MAX"] = max
+        end_dict["AVG"] = avg
         list_end.append(end_dict)
 
     return jsonify(list_end)
