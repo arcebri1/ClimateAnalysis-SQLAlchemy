@@ -51,8 +51,7 @@ I did a climate analysis, data exploration and Flask API on Honolulu,Hawaii.
   * Plotted the results as a histogram with `bins=12`.
 
   ![](images/stationanalysis.gif)
-  ![](plots/temperaturefreq.png)
-
+  
 
 ## Climate App
 
