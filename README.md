@@ -22,11 +22,17 @@ I did a climate analysis, data exploration and Flask API on Honolulu,Hawaii.
 
 * Loaded the query results into a Pandas DataFrame and set the index to the date column.
 
+![](images/prcpdates.png)
+
 * Sorted the DataFrame values by `date`.
 
 * Plotted the results using the DataFrame `plot` method.
 
+![](plots/precipitationbydate.png)
+
 * Used Pandas to print the summary statistics for the precipitation data.
+
+![](images/prcpsummary.png)
 
 ### Station Analysis
 
