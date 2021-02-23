@@ -22,9 +22,9 @@ I did a climate analysis, data exploration and Flask API on Honolulu,Hawaii.
 
 * Loaded the query results into a Pandas DataFrame and set the index to the date column.
 
-![](images/prcpdates.png)
-
 * Sorted the DataFrame values by `date`.
+
+![](images/prcpdates.png)
 
 * Plotted the results using the DataFrame `plot` method.
 
@@ -49,6 +49,9 @@ I did a climate analysis, data exploration and Flask API on Honolulu,Hawaii.
   * Filtered by the station with the highest number of observations.
 
   * Plotted the results as a histogram with `bins=12`.
+
+  ![](images/stationanalysis.gif)
+  ![](plots/temperaturefreq.png)
 
 
 ## Climate App
@@ -98,9 +101,14 @@ Designed a Flask API based on the queries that were developed above.
 
   * Used the peak-to-peak (TMAX-TMIN) value as the y error bar (YERR).
 
+![](images/tempanalysis.png)
+![](plots/tripavgtemp.png)
+
 ### Daily Rainfall Average
 
 * Calculated the rainfall per weather station using the previous year's matching dates.
+
+![](images/rainfallavg.png)
 
 - - -
 The data is provided by UCSD Extension: Data Science and Visualization Bootcamp.
